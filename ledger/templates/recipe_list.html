@@ -6,8 +6,8 @@
 <body>
     <header>Recipe Book</header>
     <ul>
-      {% for recipe in recipes %}
-        <li><a href="{{recipe.link}}">{{recipe.name}}</a></li>
+      {% for recipe in recipes.all %}
+        <li><a href="{{recipe.get_absolute_url}}">{{recipe.name}}</a></li>
       {% endfor %}
     </ul>
 </body>
