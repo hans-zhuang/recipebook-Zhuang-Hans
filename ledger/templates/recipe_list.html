@@ -4,7 +4,17 @@
     <title>Recipe Book</title>
 </head>
 <body>
-    <header>Recipe Book</header>
+    <h1>Recipe Book</h1>
+    {% if request.user.is_authenticated %}
+      <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Logout</button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+    <h2>Recipe List:</h2>
     <ul>
       {% for recipe in recipes.all %}
         <li><a href="{{recipe.get_absolute_url}}">{{recipe.name}}</a></li>

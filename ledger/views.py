@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # def recipe_list(request):
@@ -138,15 +139,19 @@ from django.views.generic import View
 #     }
 #     return render(request, "recipe_2.html", ctx)
 
+
 class RecipeListView(ListView):
     model = Recipe
     template_name = 'recipe_list.html'
     context_object_name = 'recipes'
 
-class RecipeDetailView(DetailView):
+
+class RecipeDetailView(LoginRequiredMixin, DetailView):
     model = Recipe 
     template_name = 'recipe_detail.html'
+    redirect_field_name = 'recipe_list.html'
     context_object_name = 'recipes'
+
 
 class recipe_detail(View):
     def get(self, request, id):
