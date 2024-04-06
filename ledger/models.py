@@ -6,8 +6,12 @@ from django.urls import reverse
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, default='A Random Person')
     bio = models.TextField()
+
+    def __str__(self):
+        return self.name
+
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
@@ -18,7 +22,13 @@ class Ingredient(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(max_length=100)
-    author = models.CharField(max_length=50, default='n/a')
+    author = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name='author',
+        default = None
+    )
+
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
@@ -27,6 +37,19 @@ class Recipe(models.Model):
     
     def get_absolute_url(self):
         return reverse('ledger:recipe_detail', args=[self.id])
+    
+    def go_back(self):
+        return reverse('ledger:recipe_list')
+    
+
+class RecipeImage(models.Model):
+    Image = models.ImageField(upload_to='images/', null=False)
+    Description = models.CharField(max_length=255)
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
 
 
 class RecipeIngredient(models.Model):
