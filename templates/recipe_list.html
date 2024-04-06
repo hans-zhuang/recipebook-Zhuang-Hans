@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Recipe Book{% endblock %}
+{% block main %}
+  <h1>Recipe Book</h1>
+  <h3>Welcome to my site, 
+    {% if request.user.is_authenticated %}
+      {{ user.profile.name }}!
+    {% else %}
+      Stranger!
+    {% endif %}
+  <br>You are currently at: recipes/list</h3>
+  {% if request.user.is_authenticated %}
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Logout</button>
+    </form>
+    <a href="{% url 'ledger:recipe-add' %}">
+      <button type="submit">Add New Recipe</button></a>
+  {% else %}
+    <a href="{% url 'login' %}"><button type="submit">Login</button></a>
+  {% endif %}
+  <h2>Recipe List:</h2>
+  <ul>
+    {% for recipe in recipes.all %}
+      <li><a href="{{recipe.get_absolute_url}}">{{recipe.name}}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

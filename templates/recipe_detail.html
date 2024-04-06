@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<html>
+  <head>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css">
+  </head>
+  {% block title %}Recipe Book{% endblock %}
+  {% block main %}
+    <h1>Recipe Book</h1>  
+    <h3>You are currently at: recipe/{{ recipes.id }}</h3>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Logout</button>
+    </form>
+    <h2>{{ recipes.name }}</h2>
+
+    <a href="{% url 'ledger:recipe-image' pk=recipes.pk %}">
+      <button type="submit">Add Recipe Image</button></a>
+      
+      <br>
+    {% for img in recipes.images.all %}
+      {% if img %}
+        <img src="{{ img.Image.url }}" alt="{{ img.Description }}">
+      {% endif %}
+    {% endfor %} 
+
+    <h4>Author: {{ recipes.author.name }}<br>
+
+    Date Created: {{ recipes.date_created }}<br>
+    Date Updated:{{ recipes.date_updated }}</h4>
+    <h3>Ingredients:</h3>
+      <ul>
+        {% for ingredient in recipes.ingredients.all %}
+          <li>{{ ingredient.quantity }} {{ ingredient.ingredient.name }}</li>
+        {% endfor %}  
+      </ul>
+      <a href="{{recipes.go_back}}"><button type="submit">Go Back</button></a>
+  {% endblock %}
+</html>
